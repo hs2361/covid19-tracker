@@ -90,6 +90,8 @@ def create_total_bar(df1, df2, df3):
     total1 = [df1.sum(axis=0)[date] for date in dates]
     total2 = [df2.sum(axis=0)[date] for date in dates]
     total3 = [df3.sum(axis=0)[date] for date in dates]
+    totalActive = [total1[i] - total2[i] - total3[i]
+                   for i in range(len(total1))]
 
     _, ax = plt.subplots(figsize=(8, 5))
 
@@ -99,11 +101,11 @@ def create_total_bar(df1, df2, df3):
     plt.ylabel('Number of cases')
     plt.title('Summary by date')
 
-    bar1 = ax.bar(x-w, total1, color='lightskyblue', width=w)
+    bar1 = ax.bar(x-w, totalActive, color='lightskyblue', width=w)
     bar2 = ax.bar(x, total2, color='red', width=w)
     bar3 = ax.bar(x+w, total3, color='lightgreen', width=w)
 
-    plt.legend(labels=['Confirmed', 'Deaths', 'Recovered'], loc='upper right')
+    plt.legend(labels=['Active', 'Deaths', 'Recovered'], loc='upper left')
 
     autolabel(ax, bar1)
     autolabel(ax, bar2)
@@ -111,6 +113,7 @@ def create_total_bar(df1, df2, df3):
 
     plt.gca().xaxis.set_major_formatter(DateFormatter('%d-%m-%y'))
     plt.xticks([(datetime.strptime(date, "%d-%m-%y")) for date in dates])
+    plt.setp(ax.get_xticklabels(), rotation=30, horizontalalignment='right')
     plt.savefig(f'plots/total_{today}.png', bbox_inches='tight')
 
 
@@ -148,6 +151,7 @@ def create_new_bar(df1, df2, df3):
 
     plt.gca().xaxis.set_major_formatter(DateFormatter('%d-%m-%y'))
     plt.xticks([(datetime.strptime(date, "%d-%m-%y")) for date in dates[1:]])
+    plt.setp(ax.get_xticklabels(), rotation=30, horizontalalignment='right')
     plt.savefig(f'plots/new_{today}.png', bbox_inches='tight')
 
 
